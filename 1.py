@@ -6,10 +6,10 @@ import torch
 import win32api, win32con, win32gui
 
 # model = torch.hub.load('C:/Users/Administrator/yolov5', 'custom', path='exp20.pt', source='local', force_reload=True) 
-model = torch.hub.load('C:/Users/Administrator/yolov5', 'custom', path='apex_v15.pt', source='local', force_reload=True) 
+model = torch.hub.load('C:/Users/Administrator/yolov5', 'custom', path='apex_v16.pt', source='local', force_reload=True) 
 
 AIMING_POINT = 0  # 0 for "head", 1 for chest, 2 for legs
-cv2.namedWindow('test',cv2.WINDOW_NORMAL)
+# cv2.namedWindow('test',cv2.WINDOW_NORMAL)
 
 with mss.mss() as sct: 
  
@@ -39,15 +39,13 @@ with mss.mss() as sct:
         # Convert to format model can read 
  
         RGBframe = BRGframe[:, :, [2, 1, 0]] 
- 
-  
- 
+
         # PASSING CONVERTED SCREENSHOT INTO MODEL 
  
         results = model(RGBframe, size=600)
-        model.conf = 0.7
+        model.conf = 0.6
         # model.classes = [0,1,2,4] #exp20
-        model.classes = [0,2] # exp32
+        model.classes = [0,2] # apex_v15
         # READING OUTPUT FROM MODEL AND DETERMINING DISTANCES TO ENEMIES FROM CENTER OF THE WINDOW 
  
         # Get number of enemies / num of the rows of .xyxy[0] array 
@@ -81,7 +79,7 @@ with mss.mss() as sct:
                 centerX = (x2 - x1) / 2 + x1 
                 centerY = (y2 - y1) / 2 + y1 
 
-                distance = math.sqrt(((centerX - 300) ** 2) + ((centerY - 300) ** 2)) 
+                distance = math.sqrt(((centerX - (300)) ** 2) + ((centerY - 300) ** 2)) 
                 print(f'{t} : {pre}%')
                 distances.append(distance) 
                 target.append(t)
@@ -130,9 +128,9 @@ with mss.mss() as sct:
                 # win32api.mouse_event(win32con.MOUSEEVENTF_LEFTUP, xx, yy, 0, 0)
                 # time.sleep(0.1)
 
-                results.display(render=True) 
-                cv2.imshow('test', results.imgs[0]) 
-                cv2.waitKey(1)
+                # results.display(render=True) 
+                # cv2.imshow('test', results.imgs[0]) 
+                # cv2.waitKey(1)
             except : pass
  
         # DISPLAYING DATA 
